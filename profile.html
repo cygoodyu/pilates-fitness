@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>个人资料 - 普拉提健身</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        .ios-status-bar {
+            height: 44px;
+            background-color: #ffffff;
+        }
+        .ios-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item.active {
+            color: #ff2d55;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .profile-header {
+            background: linear-gradient(to right, #ff2d55, #ff4e85);
+            padding: 20px;
+            color: white;
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+        .menu-item {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            margin-right: 12px;
+            color: white;
+        }
+        .badge {
+            background-color: #ff2d55;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 10px;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.3s;
+            stroke: #ff2d55;
+            stroke-width: 4;
+            fill: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar flex items-center justify-between px-5">
+        <div class="text-sm font-medium">9:41</div>
+        <div class="flex space-x-2">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="bg-white px-5 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <a href="index.html" class="mr-4"><i class="fas fa-chevron-left text-gray-600"></i></a>
+            <h1 class="text-xl font-bold">个人资料</h1>
+        </div>
+        <div class="flex space-x-4">
+            <i class="fas fa-cog text-gray-600"></i>
+        </div>
+    </header>
+
+    <!-- 个人资料头部 -->
+    <div class="profile-header mb-5">
+        <div class="flex items-center mb-4">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="用户头像" class="avatar mr-4">
+            <div>
+                <h2 class="text-lg font-bold">李小美</h2>
+                <div class="flex items-center text-sm opacity-90">
+                    <i class="fas fa-map-marker-alt mr-1 text-xs"></i>
+                    <span>上海市</span>
+                </div>
+                <div class="text-sm opacity-90 mt-1">普拉提爱好者 | 初级学员</div>
+            </div>
+        </div>
+        <div class="flex justify-between">
+            <div class="text-center">
+                <div class="text-lg font-bold">28</div>
+                <div class="text-xs opacity-90">总训练天数</div>
+            </div>
+            <div class="text-center">
+                <div class="text-lg font-bold">18.5h</div>
+                <div class="text-xs opacity-90">总训练时长</div>
+            </div>
+            <div class="text-center">
+                <div class="text-lg font-bold">5265</div>
+                <div class="text-xs opacity-90">总消耗卡路里</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 会员信息 -->
+    <div class="px-4 mb-5">
+        <div class="card p-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="relative mr-4">
+                        <svg class="progress-ring" width="50" height="50">
+                            <circle class="progress-ring-circle" cx="25" cy="25" r="20" stroke-dasharray="125.6" stroke-dashoffset="31.4"></circle>
+                        </svg>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-pink-600">75%</div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">高级会员</h3>
+                        <p class="text-xs text-gray-500">有效期至 2023-12-31</p>
+                    </div>
+                </div>
+                <button class="bg-pink-600 text-white rounded-lg px-4 py-2 text-sm">
+                    续费会员
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人数据 -->
+    <div class="px-4 mb-5">
+        <h2 class="text-lg font-bold mb-3">个人数据</h2>
+        <div class="card">
+            <div class="grid grid-cols-3 divide-x divide-gray-100">
+                <div class="p-4 text-center">
+                    <div class="text-sm text-gray-500 mb-1">身高</div>
+                    <div class="text-lg font-bold text-gray-800">165cm</div>
+                </div>
+                <div class="p-4 text-center">
+                    <div class="text-sm text-gray-500 mb-1">体重</div>
+                    <div class="text-lg font-bold text-gray-800">52kg</div>
+                </div>
+                <div class="p-4 text-center">
+                    <div class="text-sm text-gray-500 mb-1">BMI</div>
+                    <div class="text-lg font-bold text-gray-800">19.1</div>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 p-4">
+                <button class="w-full text-center text-pink-600 font-medium">
+                    更新身体数据
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 功能菜单 -->
+    <div class="px-4 mb-5">
+        <h2 class="text-lg font-bold mb-3">设置</h2>
+        <div class="card">
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-blue-500">
+                        <i class="fas fa-bell text-sm"></i>
+                    </div>
+                    <span>消息通知</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="badge mr-2">2</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-purple-500">
+                        <i class="fas fa-credit-card text-sm"></i>
+                    </div>
+                    <span>支付管理</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-orange-500">
+                        <i class="fas fa-wallet text-sm"></i>
+                    </div>
+                    <span>我的钱包</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-500 mr-2">余额: ¥150</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-green-500">
+                        <i class="fas fa-heart text-sm"></i>
+                    </div>
+                    <span>健康档案</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 更多选项 -->
+    <div class="px-4 mb-5">
+        <div class="card">
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-red-500">
+                        <i class="fas fa-question-circle text-sm"></i>
+                    </div>
+                    <span>帮助与反馈</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-gray-500">
+                        <i class="fas fa-shield-alt text-sm"></i>
+                    </div>
+                    <span>隐私设置</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center">
+                    <div class="menu-icon bg-teal-500">
+                        <i class="fas fa-info-circle text-sm"></i>
+                    </div>
+                    <span>关于我们</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 退出登录 -->
+    <div class="px-4 mb-5">
+        <button class="w-full py-3 text-center text-red-500 font-medium bg-white rounded-lg shadow-sm">
+            退出登录
+        </button>
+    </div>
+
+    <!-- iOS 标签栏 -->
+    <div class="ios-tab-bar flex justify-around items-center">
+        <div class="tab-item">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span>首页</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-play-circle text-xl mb-1"></i>
+            <span>课程</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-calendar-alt text-xl mb-1"></i>
+            <span>计划</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-users text-xl mb-1"></i>
+            <span>社区</span>
+        </div>
+        <div class="tab-item active">
+            <i class="fas fa-user text-xl mb-1"></i>
+            <span>我的</span>
+        </div>
+    </div>
+
+    <script>
+        // 菜单项点击效果
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // 在实际应用中可以跳转到对应页面
+                // 这里只是简单的添加一个点击效果
+                item.style.backgroundColor = '#f9f9f9';
+                setTimeout(() => {
+                    item.style.backgroundColor = '';
+                }, 150);
+            });
+        });
+
+        // 标签栏切换
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const text = tab.querySelector('span').textContent;
+                if (text === '首页') {
+                    window.location.href = 'index.html';
+                } else if (text === '课程') {
+                    window.location.href = 'courses.html';
+                } else if (text === '计划') {
+                    window.location.href = 'plans.html';
+                } else if (text === '社区') {
+                    window.location.href = 'community.html';
+                } else if (text === '我的') {
+                    window.location.href = 'profile.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
