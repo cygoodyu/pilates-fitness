@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>课程预约 - 普拉提健身</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        .ios-status-bar {
+            height: 44px;
+            background-color: #ffffff;
+        }
+        .ios-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item.active {
+            color: #ff2d55;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .schedule-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            background-color: #f0f0f0;
+            color: #666;
+            margin-right: 5px;
+        }
+        .date-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            border-radius: 12px;
+            width: 50px;
+            transition: all 0.3s ease;
+        }
+        .date-item.active {
+            background-color: #ff2d55;
+            color: white;
+        }
+        .weekday {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .date {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .time-slot {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: #f1f1f1;
+            margin-right: 8px;
+            font-size: 12px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        .time-slot.available {
+            border: 1px solid #e0e0e0;
+        }
+        .time-slot.selected {
+            background-color: #ff2d55;
+            color: white;
+            border: 1px solid #ff2d55;
+        }
+        .time-slot.booked {
+            background-color: #e0e0e0;
+            color: #999;
+            text-decoration: line-through;
+            cursor: not-allowed;
+        }
+        .button-primary {
+            background-color: #ff2d55;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            width: 100%;
+            text-align: center;
+        }
+        .button-outline {
+            background-color: transparent;
+            color: #ff2d55;
+            border: 1px solid #ff2d55;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar flex items-center justify-between px-5">
+        <div class="text-sm font-medium">9:41</div>
+        <div class="flex space-x-2">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="bg-white px-5 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <a href="index.html" class="mr-4"><i class="fas fa-chevron-left text-gray-600"></i></a>
+            <h1 class="text-xl font-bold">课程预约</h1>
+        </div>
+        <div class="flex space-x-4">
+            <i class="fas fa-bell text-gray-600"></i>
+        </div>
+    </header>
+
+    <!-- 我的预约 -->
+    <div class="px-4 py-4">
+        <h2 class="text-lg font-bold mb-3">我的预约</h2>
+        <div class="card mb-4">
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="font-bold text-base mb-1">普拉提核心入门</h3>
+                        <div class="flex items-center text-xs text-gray-500 mb-2">
+                            <i class="far fa-calendar-alt mr-1"></i>
+                            <span>今天 19:30-20:30</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>线上直播课程</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="schedule-tag bg-green-100 text-green-600 mb-2">已确认</span>
+                        <span class="text-xs text-gray-500">30分钟后开始</span>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button class="button-outline text-gray-500 border-gray-300 w-[48%]">
+                        取消预约
+                    </button>
+                    <button class="button-primary w-[48%]">
+                        进入课程
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-5">
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="font-bold text-base mb-1">普拉提全身塑形</h3>
+                        <div class="flex items-center text-xs text-gray-500 mb-2">
+                            <i class="far fa-calendar-alt mr-1"></i>
+                            <span>明天 10:00-11:00</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>健身中心 - 普拉提室</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="schedule-tag bg-blue-100 text-blue-600 mb-2">待确认</span>
+                        <span class="text-xs text-gray-500">提前1小时提醒</span>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button class="button-outline text-gray-500 border-gray-300 w-[48%]">
+                        取消预约
+                    </button>
+                    <button class="button-outline w-[48%]">
+                        查看位置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 预约新课程 -->
+    <div class="px-4 mb-5">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-bold">预约新课程</h2>
+            <div class="text-sm text-gray-500">
+                <i class="fas fa-filter mr-1"></i>
+                <span>筛选</span>
+            </div>
+        </div>
+
+        <!-- 日期选择器 -->
+        <div class="overflow-x-auto py-2 mb-4">
+            <div class="flex space-x-3" style="width: max-content;">
+                <div class="date-item">
+                    <div class="weekday">今天</div>
+                    <div class="date">16</div>
+                </div>
+                <div class="date-item active">
+                    <div class="weekday">明天</div>
+                    <div class="date">17</div>
+                </div>
+                <div class="date-item">
+                    <div class="weekday">周五</div>
+                    <div class="date">18</div>
+                </div>
+                <div class="date-item">
+                    <div class="weekday">周六</div>
+                    <div class="date">19</div>
+                </div>
+                <div class="date-item">
+                    <div class="weekday">周日</div>
+                    <div class="date">20</div>
+                </div>
+                <div class="date-item">
+                    <div class="weekday">周一</div>
+                    <div class="date">21</div>
+                </div>
+                <div class="date-item">
+                    <div class="weekday">周二</div>
+                    <div class="date">22</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 可预约课程列表 -->
+        <div class="card mb-4">
+            <div class="p-4">
+                <!-- 课程信息 -->
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="font-bold text-base mb-1">普拉提全身塑形</h3>
+                        <div class="flex mb-2">
+                            <span class="schedule-tag bg-pink-100 text-pink-600">入门</span>
+                            <span class="schedule-tag bg-purple-100 text-purple-600">45分钟</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500 mb-1">
+                            <i class="fas fa-user-alt mr-1"></i>
+                            <span>张教练 | 初级</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>线上直播</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-pink-600 font-medium">
+                        可预约：8人
+                    </div>
+                </div>
+
+                <!-- 时间选择 -->
+                <div class="mb-3">
+                    <div class="text-sm font-medium mb-2">选择时间</div>
+                    <div class="flex overflow-x-auto pb-2">
+                        <div class="time-slot booked flex-shrink-0">09:00</div>
+                        <div class="time-slot available flex-shrink-0 selected">10:00</div>
+                        <div class="time-slot available flex-shrink-0">14:00</div>
+                        <div class="time-slot available flex-shrink-0">16:00</div>
+                        <div class="time-slot booked flex-shrink-0">18:00</div>
+                        <div class="time-slot available flex-shrink-0">19:30</div>
+                    </div>
+                </div>
+
+                <button class="button-primary">
+                    立即预约
+                </button>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="p-4">
+                <!-- 课程信息 -->
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="font-bold text-base mb-1">普拉提核心训练</h3>
+                        <div class="flex mb-2">
+                            <span class="schedule-tag bg-orange-100 text-orange-600">进阶</span>
+                            <span class="schedule-tag bg-purple-100 text-purple-600">60分钟</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500 mb-1">
+                            <i class="fas fa-user-alt mr-1"></i>
+                            <span>李教练 | 中级</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>健身中心 - 普拉提室</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-pink-600 font-medium">
+                        可预约：3人
+                    </div>
+                </div>
+
+                <!-- 时间选择 -->
+                <div class="mb-3">
+                    <div class="text-sm font-medium mb-2">选择时间</div>
+                    <div class="flex overflow-x-auto pb-2">
+                        <div class="time-slot booked flex-shrink-0">09:30</div>
+                        <div class="time-slot booked flex-shrink-0">11:00</div>
+                        <div class="time-slot available flex-shrink-0">15:00</div>
+                        <div class="time-slot available flex-shrink-0">17:30</div>
+                        <div class="time-slot booked flex-shrink-0">19:00</div>
+                    </div>
+                </div>
+
+                <button class="button-primary">
+                    立即预约
+                </button>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="p-4">
+                <!-- 课程信息 -->
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="font-bold text-base mb-1">普拉提柔韧伸展</h3>
+                        <div class="flex mb-2">
+                            <span class="schedule-tag bg-green-100 text-green-600">放松</span>
+                            <span class="schedule-tag bg-purple-100 text-purple-600">30分钟</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500 mb-1">
+                            <i class="fas fa-user-alt mr-1"></i>
+                            <span>王教练 | 初级</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>线上直播</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-pink-600 font-medium">
+                        可预约：15人
+                    </div>
+                </div>
+
+                <!-- 时间选择 -->
+                <div class="mb-3">
+                    <div class="text-sm font-medium mb-2">选择时间</div>
+                    <div class="flex overflow-x-auto pb-2">
+                        <div class="time-slot available flex-shrink-0">08:00</div>
+                        <div class="time-slot available flex-shrink-0">12:30</div>
+                        <div class="time-slot available flex-shrink-0">14:30</div>
+                        <div class="time-slot available flex-shrink-0">18:30</div>
+                        <div class="time-slot available flex-shrink-0">20:00</div>
+                        <div class="time-slot available flex-shrink-0">21:30</div>
+                    </div>
+                </div>
+
+                <button class="button-primary">
+                    立即预约
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- iOS 标签栏 -->
+    <div class="ios-tab-bar flex justify-around items-center">
+        <div class="tab-item">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span>首页</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-play-circle text-xl mb-1"></i>
+            <span>课程</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-calendar-alt text-xl mb-1"></i>
+            <span>计划</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-users text-xl mb-1"></i>
+            <span>社区</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-user text-xl mb-1"></i>
+            <span>我的</span>
+        </div>
+    </div>
+
+    <script>
+        // 日期选择器交互
+        document.querySelectorAll('.date-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.date-item').forEach(d => d.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // 时间选择器交互
+        document.querySelectorAll('.time-slot.available').forEach(slot => {
+            slot.addEventListener('click', () => {
+                const parent = slot.parentElement;
+                parent.querySelectorAll('.time-slot.available').forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+            });
+        });
+
+        // 标签栏切换
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const text = tab.querySelector('span').textContent;
+                if (text === '首页') {
+                    window.location.href = 'index.html';
+                } else if (text === '课程') {
+                    window.location.href = 'courses.html';
+                } else if (text === '计划') {
+                    window.location.href = 'plans.html';
+                } else if (text === '社区') {
+                    window.location.href = 'community.html';
+                } else if (text === '我的') {
+                    window.location.href = 'profile.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
