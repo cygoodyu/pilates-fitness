@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>普拉提健身</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        .ios-status-bar {
+            height: 44px;
+            background-color: #ffffff;
+        }
+        .ios-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item.active {
+            color: #ff2d55;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .feature-card {
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card img {
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .feature-card:active img {
+            transform: scale(1.05);
+        }
+        .feature-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar flex items-center justify-between px-5">
+        <div class="text-sm font-medium">9:41</div>
+        <div class="flex space-x-2">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="bg-white px-5 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">普拉提健身</h1>
+        <div class="flex space-x-4">
+            <i class="fas fa-bell text-gray-600"></i>
+            <i class="fas fa-search text-gray-600"></i>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="px-4 py-3">
+        <!-- 欢迎区域 -->
+        <div class="mb-5">
+            <h2 class="text-lg font-bold mb-1">早上好，健身达人</h2>
+            <p class="text-gray-600 text-sm">今天是您训练的第15天，继续保持！</p>
+        </div>
+
+        <!-- 功能模块区域 -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- 课程模块 -->
+            <a href="courses.html" class="card feature-card">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="普拉提课程" class="w-full h-full">
+                <div class="feature-overlay">
+                    <h3 class="font-bold">课程教程</h3>
+                    <p class="text-xs opacity-90">专业普拉提教程视频</p>
+                </div>
+            </a>
+
+            <!-- 训练计划模块 -->
+            <a href="plans.html" class="card feature-card">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="训练计划" class="w-full h-full">
+                <div class="feature-overlay">
+                    <h3 class="font-bold">训练计划</h3>
+                    <p class="text-xs opacity-90">定制个人健身方案</p>
+                </div>
+            </a>
+
+            <!-- 社区模块 -->
+            <a href="community.html" class="card feature-card mt-4">
+                <img src="https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="社区" class="w-full h-full">
+                <div class="feature-overlay">
+                    <h3 class="font-bold">社区交流</h3>
+                    <p class="text-xs opacity-90">分享心得与经验</p>
+                </div>
+            </a>
+
+            <!-- 训练记录模块 -->
+            <a href="records.html" class="card feature-card mt-4">
+                <img src="https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="训练记录" class="w-full h-full">
+                <div class="feature-overlay">
+                    <h3 class="font-bold">训练记录</h3>
+                    <p class="text-xs opacity-90">追踪健身进度</p>
+                </div>
+            </a>
+
+            <!-- 预约/课程表模块 -->
+            <a href="schedule.html" class="card feature-card mt-4">
+                <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="预约课程" class="w-full h-full">
+                <div class="feature-overlay">
+                    <h3 class="font-bold">预约课程</h3>
+                    <p class="text-xs opacity-90">线上预约普拉提课程</p>
+                </div>
+            </a>
+
+            <!-- 个人资料模块 -->
+            <a href="profile.html" class="card feature-card mt-4">
+                <img src="https://images.unsplash.com/photo-1571019613576-2b22c76fd955?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="个人资料" class="w-full h-full">
+                <div class="feature-overlay">
+                    <h3 class="font-bold">个人资料</h3>
+                    <p class="text-xs opacity-90">管理个人信息</p>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <!-- iOS 标签栏 -->
+    <div class="ios-tab-bar flex justify-around items-center">
+        <div class="tab-item active">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span>首页</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-play-circle text-xl mb-1"></i>
+            <span>课程</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-calendar-alt text-xl mb-1"></i>
+            <span>计划</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-users text-xl mb-1"></i>
+            <span>社区</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-user text-xl mb-1"></i>
+            <span>我的</span>
+        </div>
+    </div>
+
+    <script>
+        // 标签栏切换
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // 添加页面跳转逻辑
+                const text = tab.querySelector('span').textContent;
+                if (text === '首页') {
+                    window.location.href = 'index.html';
+                } else if (text === '课程') {
+                    window.location.href = 'courses.html';
+                } else if (text === '计划') {
+                    window.location.href = 'plans.html';
+                } else if (text === '社区') {
+                    window.location.href = 'community.html';
+                } else if (text === '我的') {
+                    window.location.href = 'profile.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
