@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>训练记录 - 普拉提健身</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        .ios-status-bar {
+            height: 44px;
+            background-color: #ffffff;
+        }
+        .ios-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item.active {
+            color: #ff2d55;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .record-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            background-color: #f0f0f0;
+            color: #666;
+            margin-right: 5px;
+        }
+        .stat-box {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 16px;
+            text-align: center;
+        }
+        .calendar-day {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .calendar-day.today {
+            color: #ff2d55;
+            font-weight: bold;
+        }
+        .calendar-day.has-workout {
+            position: relative;
+        }
+        .calendar-day.has-workout::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #ff2d55;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            background-color: #e0e0e0;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff2d55;
+            border: 2px solid #fff;
+            z-index: 1;
+        }
+        .time-period-tab {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 20px;
+            color: #666;
+            background-color: #f1f1f1;
+            transition: all 0.3s ease;
+        }
+        .time-period-tab.active {
+            background-color: #ff2d55;
+            color: white;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.3s;
+            stroke: #ff2d55;
+            stroke-width: 8;
+            fill: transparent;
+        }
+        .progress-ring-bg {
+            stroke: #f1f1f1;
+            stroke-width: 8;
+            fill: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar flex items-center justify-between px-5">
+        <div class="text-sm font-medium">9:41</div>
+        <div class="flex space-x-2">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="bg-white px-5 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <a href="index.html" class="mr-4"><i class="fas fa-chevron-left text-gray-600"></i></a>
+            <h1 class="text-xl font-bold">训练记录</h1>
+        </div>
+        <div class="flex space-x-4">
+            <i class="fas fa-share-alt text-gray-600"></i>
+            <i class="fas fa-ellipsis-h text-gray-600"></i>
+        </div>
+    </header>
+
+    <!-- 统计概览 -->
+    <div class="px-4 py-4">
+        <div class="flex justify-between mb-4">
+            <div class="time-period-tab active">周</div>
+            <div class="time-period-tab">月</div>
+            <div class="time-period-tab">年</div>
+            <div class="time-period-tab">全部</div>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mb-5">
+            <!-- 训练次数 -->
+            <div class="stat-box">
+                <div class="text-xs text-gray-500 mb-1">训练次数</div>
+                <div class="text-2xl font-bold text-gray-800">15</div>
+                <div class="text-xs text-green-500">
+                    <i class="fas fa-arrow-up mr-1"></i>+3
+                </div>
+            </div>
+            
+            <!-- 训练时长 -->
+            <div class="stat-box">
+                <div class="text-xs text-gray-500 mb-1">训练时长</div>
+                <div class="text-2xl font-bold text-gray-800">6.5h</div>
+                <div class="text-xs text-green-500">
+                    <i class="fas fa-arrow-up mr-1"></i>+1.2h
+                </div>
+            </div>
+            
+            <!-- 消耗热量 -->
+            <div class="stat-box">
+                <div class="text-xs text-gray-500 mb-1">消耗热量</div>
+                <div class="text-2xl font-bold text-gray-800">1860</div>
+                <div class="text-xs text-green-500">
+                    <i class="fas fa-arrow-up mr-1"></i>+320
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 训练目标 -->
+    <div class="px-4 mb-5">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-bold">训练目标</h2>
+            <div class="text-sm text-pink-600">本周</div>
+        </div>
+        <div class="card p-4">
+            <div class="flex items-center mb-4">
+                <div class="mr-4 relative">
+                    <svg class="progress-ring" width="70" height="70">
+                        <circle class="progress-ring-bg" cx="35" cy="35" r="30"></circle>
+                        <circle class="progress-ring-circle" cx="35" cy="35" r="30" stroke-dasharray="188.5" stroke-dashoffset="47.1"></circle>
+                    </svg>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                        <div class="text-lg font-bold">75%</div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="text-sm font-medium">每周训练</div>
+                        <div class="text-sm text-gray-500">3/4次</div>
+                    </div>
+                    <div class="flex mb-3">
+                        <span class="record-tag bg-pink-100 text-pink-600">每周目标</span>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        距离下次训练还有1天 · 本周目标即将完成
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <div class="mr-4 relative">
+                    <svg class="progress-ring" width="70" height="70">
+                        <circle class="progress-ring-bg" cx="35" cy="35" r="30"></circle>
+                        <circle class="progress-ring-circle" cx="35" cy="35" r="30" stroke-dasharray="188.5" stroke-dashoffset="94.2"></circle>
+                    </svg>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                        <div class="text-lg font-bold">50%</div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="text-sm font-medium">训练时长</div>
+                        <div class="text-sm text-gray-500">2.5/5小时</div>
+                    </div>
+                    <div class="flex mb-3">
+                        <span class="record-tag bg-blue-100 text-blue-600">每周目标</span>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        需要再训练2.5小时 · 加油，你能做到！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月历视图 -->
+    <div class="px-4 mb-5">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-bold">训练日历</h2>
+            <div class="text-sm text-gray-500">2023年7月</div>
+        </div>
+        <div class="card p-4">
+            <div class="grid grid-cols-7 mb-2">
+                <div class="calendar-day font-medium">一</div>
+                <div class="calendar-day font-medium">二</div>
+                <div class="calendar-day font-medium">三</div>
+                <div class="calendar-day font-medium">四</div>
+                <div class="calendar-day font-medium">五</div>
+                <div class="calendar-day font-medium">六</div>
+                <div class="calendar-day font-medium">日</div>
+            </div>
+            <div class="grid grid-cols-7">
+                <div class="calendar-day text-gray-300">26</div>
+                <div class="calendar-day text-gray-300">27</div>
+                <div class="calendar-day text-gray-300">28</div>
+                <div class="calendar-day text-gray-300">29</div>
+                <div class="calendar-day text-gray-300">30</div>
+                <div class="calendar-day has-workout">1</div>
+                <div class="calendar-day">2</div>
+                <div class="calendar-day has-workout">3</div>
+                <div class="calendar-day has-workout">4</div>
+                <div class="calendar-day">5</div>
+                <div class="calendar-day has-workout">6</div>
+                <div class="calendar-day has-workout">7</div>
+                <div class="calendar-day">8</div>
+                <div class="calendar-day has-workout">9</div>
+                <div class="calendar-day has-workout">10</div>
+                <div class="calendar-day has-workout">11</div>
+                <div class="calendar-day">12</div>
+                <div class="calendar-day has-workout">13</div>
+                <div class="calendar-day">14</div>
+                <div class="calendar-day has-workout">15</div>
+                <div class="calendar-day today has-workout">16</div>
+                <div class="calendar-day">17</div>
+                <div class="calendar-day">18</div>
+                <div class="calendar-day">19</div>
+                <div class="calendar-day">20</div>
+                <div class="calendar-day">21</div>
+                <div class="calendar-day">22</div>
+                <div class="calendar-day">23</div>
+                <div class="calendar-day">24</div>
+                <div class="calendar-day">25</div>
+                <div class="calendar-day">26</div>
+                <div class="calendar-day">27</div>
+                <div class="calendar-day">28</div>
+                <div class="calendar-day">29</div>
+                <div class="calendar-day">30</div>
+                <div class="calendar-day">31</div>
+                <div class="calendar-day text-gray-300">1</div>
+                <div class="calendar-day text-gray-300">2</div>
+                <div class="calendar-day text-gray-300">3</div>
+                <div class="calendar-day text-gray-300">4</div>
+                <div class="calendar-day text-gray-300">5</div>
+                <div class="calendar-day text-gray-300">6</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 训练历史 -->
+    <div class="px-4 mb-5">
+        <h2 class="text-lg font-bold mb-3">训练历史</h2>
+        <div class="timeline">
+            <!-- 记录条目1 -->
+            <div class="timeline-item">
+                <div class="card p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-bold text-base">核心力量训练</h3>
+                            <p class="text-xs text-gray-500">今天 16:30</p>
+                        </div>
+                        <div class="flex items-center bg-pink-100 text-pink-600 rounded-full py-1 px-3 text-xs">
+                            <i class="fas fa-fire-alt mr-1"></i>
+                            <span>240 卡路里</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">30分钟</span>
+                            <span class="text-xs text-gray-500">训练时长</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-200"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">12个</span>
+                            <span class="text-xs text-gray-500">完成动作</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-200"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">4.8分</span>
+                            <span class="text-xs text-gray-500">强度评分</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 记录条目2 -->
+            <div class="timeline-item">
+                <div class="card p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-bold text-base">全身拉伸放松</h3>
+                            <p class="text-xs text-gray-500">昨天 19:45</p>
+                        </div>
+                        <div class="flex items-center bg-green-100 text-green-600 rounded-full py-1 px-3 text-xs">
+                            <i class="fas fa-fire-alt mr-1"></i>
+                            <span>180 卡路里</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">25分钟</span>
+                            <span class="text-xs text-gray-500">训练时长</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-200"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">8个</span>
+                            <span class="text-xs text-gray-500">完成动作</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-200"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">3.5分</span>
+                            <span class="text-xs text-gray-500">强度评分</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 记录条目3 -->
+            <div class="timeline-item">
+                <div class="card p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-bold text-base">腿部力量训练</h3>
+                            <p class="text-xs text-gray-500">7月13日 08:20</p>
+                        </div>
+                        <div class="flex items-center bg-orange-100 text-orange-600 rounded-full py-1 px-3 text-xs">
+                            <i class="fas fa-fire-alt mr-1"></i>
+                            <span>320 卡路里</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">45分钟</span>
+                            <span class="text-xs text-gray-500">训练时长</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-200"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">15个</span>
+                            <span class="text-xs text-gray-500">完成动作</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-200"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">4.2分</span>
+                            <span class="text-xs text-gray-500">强度评分</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button class="text-sm text-gray-500">
+                查看更多记录
+                <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- iOS 标签栏 -->
+    <div class="ios-tab-bar flex justify-around items-center">
+        <div class="tab-item">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span>首页</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-play-circle text-xl mb-1"></i>
+            <span>课程</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-calendar-alt text-xl mb-1"></i>
+            <span>计划</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-users text-xl mb-1"></i>
+            <span>社区</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-user text-xl mb-1"></i>
+            <span>我的</span>
+        </div>
+    </div>
+
+    <script>
+        // 时间段标签切换
+        document.querySelectorAll('.time-period-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.time-period-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // 标签栏切换
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const text = tab.querySelector('span').textContent;
+                if (text === '首页') {
+                    window.location.href = 'index.html';
+                } else if (text === '课程') {
+                    window.location.href = 'courses.html';
+                } else if (text === '计划') {
+                    window.location.href = 'plans.html';
+                } else if (text === '社区') {
+                    window.location.href = 'community.html';
+                } else if (text === '我的') {
+                    window.location.href = 'profile.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
