@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>社区交流 - 普拉提健身</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        .ios-status-bar {
+            height: 44px;
+            background-color: #ffffff;
+        }
+        .ios-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item.active {
+            color: #ff2d55;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .topic-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            background-color: #f0f0f0;
+            color: #666;
+            margin-right: 5px;
+        }
+        .topic-tab {
+            padding: 8px 16px;
+            font-size: 14px;
+            white-space: nowrap;
+            border-radius: 20px;
+            color: #666;
+            background-color: #f1f1f1;
+            transition: all 0.3s ease;
+        }
+        .topic-tab.active {
+            background-color: #ff2d55;
+            color: white;
+        }
+        .floating-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #ff2d55;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 45, 85, 0.4);
+            z-index: 100;
+        }
+        .like-button, .comment-button, .share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        .like-button.active {
+            color: #ff2d55;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar flex items-center justify-between px-5">
+        <div class="text-sm font-medium">9:41</div>
+        <div class="flex space-x-2">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="bg-white px-5 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <a href="index.html" class="mr-4"><i class="fas fa-chevron-left text-gray-600"></i></a>
+            <h1 class="text-xl font-bold">社区交流</h1>
+        </div>
+        <div class="flex space-x-4">
+            <i class="fas fa-search text-gray-600"></i>
+            <i class="fas fa-bell text-gray-600"></i>
+        </div>
+    </header>
+
+    <!-- 话题分类 -->
+    <div class="bg-white py-3 mb-3 overflow-x-auto">
+        <div class="flex space-x-3 px-4">
+            <div class="topic-tab active">全部</div>
+            <div class="topic-tab">经验分享</div>
+            <div class="topic-tab">训练打卡</div>
+            <div class="topic-tab">饮食健康</div>
+            <div class="topic-tab">器材交流</div>
+            <div class="topic-tab">问答求助</div>
+        </div>
+    </div>
+
+    <!-- 热门话题 -->
+    <div class="px-4 mb-4">
+        <h2 class="text-lg font-bold mb-3">热门话题</h2>
+        <div class="flex overflow-x-auto space-x-3 pb-2">
+            <div class="flex-shrink-0 w-28 h-28 bg-gradient-to-br from-pink-500 to-red-500 rounded-xl flex flex-col items-center justify-center text-white">
+                <i class="fas fa-fire text-xl mb-1"></i>
+                <div class="text-sm font-medium">28天挑战</div>
+                <div class="text-xs mt-1">2.5万讨论</div>
+            </div>
+            <div class="flex-shrink-0 w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex flex-col items-center justify-center text-white">
+                <i class="fas fa-dumbbell text-xl mb-1"></i>
+                <div class="text-sm font-medium">核心锻炼</div>
+                <div class="text-xs mt-1">1.8万讨论</div>
+            </div>
+            <div class="flex-shrink-0 w-28 h-28 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex flex-col items-center justify-center text-white">
+                <i class="fas fa-apple-alt text-xl mb-1"></i>
+                <div class="text-sm font-medium">健康饮食</div>
+                <div class="text-xs mt-1">1.5万讨论</div>
+            </div>
+            <div class="flex-shrink-0 w-28 h-28 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex flex-col items-center justify-center text-white">
+                <i class="fas fa-question-circle text-xl mb-1"></i>
+                <div class="text-sm font-medium">常见问题</div>
+                <div class="text-xs mt-1">1.2万讨论</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 帖子列表 -->
+    <div class="px-4 mb-5">
+        <!-- 帖子1 -->
+        <div class="card mb-4">
+            <div class="p-4">
+                <!-- 用户信息 -->
+                <div class="flex items-center mb-3">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <div class="font-medium">李小美</div>
+                        <div class="text-xs text-gray-500">3小时前</div>
+                    </div>
+                    <div class="ml-auto">
+                        <button class="text-gray-400 p-1"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                </div>
+
+                <!-- 帖子内容 -->
+                <div class="mb-3">
+                    <p class="text-sm mb-3">分享我的28天核心训练成果！坚持真的很重要，从一开始的挣扎到现在能轻松完成全套动作，感觉太棒了！ #普拉提 #核心训练</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <img src="https://images.unsplash.com/photo-1518310383802-6461ffad8d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="训练照片" class="rounded-lg w-full h-32 object-cover">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="训练照片" class="rounded-lg w-full h-32 object-cover">
+                    </div>
+                </div>
+
+                <!-- 话题标签 -->
+                <div class="flex mb-3">
+                    <span class="topic-tag bg-pink-100 text-pink-600">普拉提</span>
+                    <span class="topic-tag bg-blue-100 text-blue-600">核心训练</span>
+                    <span class="topic-tag bg-purple-100 text-purple-600">28天挑战</span>
+                </div>
+
+                <!-- 互动按钮 -->
+                <div class="flex justify-between border-t border-gray-100 pt-3">
+                    <button class="like-button active flex-1">
+                        <i class="fas fa-heart mr-1"></i>
+                        <span>128</span>
+                    </button>
+                    <button class="comment-button flex-1">
+                        <i class="fas fa-comment mr-1"></i>
+                        <span>36</span>
+                    </button>
+                    <button class="share-button flex-1">
+                        <i class="fas fa-share-alt mr-1"></i>
+                        <span>分享</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 帖子2 -->
+        <div class="card mb-4">
+            <div class="p-4">
+                <!-- 用户信息 -->
+                <div class="flex items-center mb-3">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <div class="font-medium">王教练</div>
+                        <div class="flex items-center">
+                            <span class="text-xs text-gray-500">5小时前</span>
+                            <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full text-xs">认证教练</span>
+                        </div>
+                    </div>
+                    <div class="ml-auto">
+                        <button class="text-gray-400 p-1"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                </div>
+
+                <!-- 帖子内容 -->
+                <div class="mb-3">
+                    <p class="text-sm mb-3">【初学者常犯的5个普拉提错误】今天想和大家分享一下我在教学中经常看到的几个问题，希望对大家有帮助！</p>
+                    <div class="bg-gray-50 p-3 rounded-lg mb-3">
+                        <p class="text-sm font-medium mb-2">1. 呼吸不协调</p>
+                        <p class="text-xs text-gray-600 mb-2">普拉提的呼吸很重要，吸气准备，呼气动作，这样才能更好地激活核心肌群。</p>
+                        <p class="text-sm font-medium mb-2">2. 速度过快</p>
+                        <p class="text-xs text-gray-600 mb-2">普拉提强调控制和精准，而不是速度。慢一点，感受每个动作。</p>
+                        <p class="text-sm font-medium mb-2">3. 忽视核心</p>
+                        <p class="text-xs text-gray-600">记住，所有动作都应该从核心出发，保持腹部紧张。</p>
+                    </div>
+                    <p class="text-sm text-blue-600">点击查看更多...</p>
+                </div>
+
+                <!-- 话题标签 -->
+                <div class="flex mb-3">
+                    <span class="topic-tag bg-yellow-100 text-yellow-600">新手指南</span>
+                    <span class="topic-tag bg-green-100 text-green-600">教练建议</span>
+                </div>
+
+                <!-- 互动按钮 -->
+                <div class="flex justify-between border-t border-gray-100 pt-3">
+                    <button class="like-button flex-1">
+                        <i class="far fa-heart mr-1"></i>
+                        <span>256</span>
+                    </button>
+                    <button class="comment-button flex-1">
+                        <i class="fas fa-comment mr-1"></i>
+                        <span>89</span>
+                    </button>
+                    <button class="share-button flex-1">
+                        <i class="fas fa-share-alt mr-1"></i>
+                        <span>分享</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 帖子3 -->
+        <div class="card mb-4">
+            <div class="p-4">
+                <!-- 用户信息 -->
+                <div class="flex items-center mb-3">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <div class="font-medium">张小姐</div>
+                        <div class="text-xs text-gray-500">昨天 19:42</div>
+                    </div>
+                    <div class="ml-auto">
+                        <button class="text-gray-400 p-1"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                </div>
+
+                <!-- 帖子内容 -->
+                <div class="mb-3">
+                    <p class="text-sm mb-3">求推荐适合在家练习的普拉提小道具！刚开始学习普拉提，想买一些辅助器材，大家有什么好的建议吗？预算300元以内。</p>
+                </div>
+
+                <!-- 话题标签 -->
+                <div class="flex mb-3">
+                    <span class="topic-tag bg-orange-100 text-orange-600">器材推荐</span>
+                    <span class="topic-tag bg-indigo-100 text-indigo-600">求助</span>
+                </div>
+
+                <!-- 互动按钮 -->
+                <div class="flex justify-between border-t border-gray-100 pt-3">
+                    <button class="like-button flex-1">
+                        <i class="far fa-heart mr-1"></i>
+                        <span>32</span>
+                    </button>
+                    <button class="comment-button flex-1">
+                        <i class="fas fa-comment mr-1"></i>
+                        <span>24</span>
+                    </button>
+                    <button class="share-button flex-1">
+                        <i class="fas fa-share-alt mr-1"></i>
+                        <span>分享</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布按钮 -->
+    <div class="floating-button">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- iOS 标签栏 -->
+    <div class="ios-tab-bar flex justify-around items-center">
+        <div class="tab-item">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span>首页</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-play-circle text-xl mb-1"></i>
+            <span>课程</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-calendar-alt text-xl mb-1"></i>
+            <span>计划</span>
+        </div>
+        <div class="tab-item active">
+            <i class="fas fa-users text-xl mb-1"></i>
+            <span>社区</span>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-user text-xl mb-1"></i>
+            <span>我的</span>
+        </div>
+    </div>
+
+    <script>
+        // 话题标签切换
+        document.querySelectorAll('.topic-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.topic-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // 点赞功能
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const icon = button.querySelector('i');
+                const countSpan = button.querySelector('span');
+                let count = parseInt(countSpan.textContent);
+                
+                if (button.classList.contains('active')) {
+                    button.classList.remove('active');
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    countSpan.textContent = count - 1;
+                } else {
+                    button.classList.add('active');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    countSpan.textContent = count + 1;
+                }
+            });
+        });
+
+        // 标签栏切换
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const text = tab.querySelector('span').textContent;
+                if (text === '首页') {
+                    window.location.href = 'index.html';
+                } else if (text === '课程') {
+                    window.location.href = 'courses.html';
+                } else if (text === '计划') {
+                    window.location.href = 'plans.html';
+                } else if (text === '社区') {
+                    window.location.href = 'community.html';
+                } else if (text === '我的') {
+                    window.location.href = 'profile.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
